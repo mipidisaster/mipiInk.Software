@@ -1,0 +1,12 @@
+# Need to ignore everything within directory
+/*
+**/__pycache__
+**/.idea
+
+# Now allow the following to be gitted
+# Include the git ignore file, as want this for all repositories
+!.gitignore
+!README.md
+
+# Include the following folders
+!/embed-pico
