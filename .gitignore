@@ -12,6 +12,8 @@
 # Include the following folders
 !/device
 
+!/common
+!/docs
 
 
 !/server
