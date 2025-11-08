@@ -1,5 +1,6 @@
 # Need to ignore everything within directory
 /*
+**.bin
 #**/__pycache__
 #**/.idea
 

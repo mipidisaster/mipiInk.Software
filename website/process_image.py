@@ -42,7 +42,7 @@ for y in range(EPD_HEIGHT):
         buffer[idx] = (c1 << 4) | c2    # type: ignore
         idx += 1
 
-with open("testImage-preprocessed.bin", "wb") as binary_file:
+with open("website/testImage-preprocessed.bin", "wb") as binary_file:
     binary_file.write(buffer)
 
 
