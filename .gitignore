@@ -10,9 +10,9 @@
 !README.md
 
 # Include the following folders
-!/embed-pico
+!/device
 
 
 
-!/website
-/website/images
+!/server
+/server/images

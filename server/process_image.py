@@ -5,7 +5,7 @@ EPD_HEIGHT = 448
 
 # A "quick" way to re-size the image
 # === 1. Load image, orientate and re-size/pad ===
-pre_img = Image.open("website/images/testImage.jpg").convert("RGB")
+pre_img = Image.open("server/images/testImage.jpg").convert("RGB")
 pre_img = ImageOps.exif_transpose(pre_img)
 #pre_img = ImageOps.pad(pre_img, (EPD_WIDTH, EPD_HEIGHT), color="#f00")
 
@@ -42,7 +42,7 @@ for y in range(EPD_HEIGHT):
         buffer[idx] = (c1 << 4) | c2    # type: ignore
         idx += 1
 
-with open("website/testImage-preprocessed.bin", "wb") as binary_file:
+with open("server/testImage-preprocessed.bin", "wb") as binary_file:
     binary_file.write(buffer)
 
 
