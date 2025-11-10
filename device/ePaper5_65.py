@@ -37,9 +37,9 @@ import utime
 EPD_WIDTH       = 600
 EPD_HEIGHT      = 448
 
-RST_PIN         = 2
+RST_PIN         = 9
 DC_PIN          = 8
-CS_PIN          = 9
+CS_PIN          = 2
 BUSY_PIN        = 1
 
 SPI_INST        = 1
