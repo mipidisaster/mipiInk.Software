@@ -1,7 +1,7 @@
 # Need to ignore everything within directory
 /*
 **.bin
-#**/__pycache__
+**/__pycache__
 #**/.idea
 
 # Now allow the following to be gitted
