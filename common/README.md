@@ -9,8 +9,6 @@ This package manages the transfer of files from one device (client) to another (
 The files are transfered using the following protocol:
 ```mermaid
 sequenceDiagram
-client->>server: Image update code
-server-->>client: ACK
 client->>server: Image name and size
 client->>server: Image file
 server-->>client: ACK

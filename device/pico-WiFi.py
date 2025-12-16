@@ -62,7 +62,7 @@ TCP_handle = TCP('0.0.0.0', 5001, True)
 
 while True:
     try:
-        TCP_handle.server_read_file()
+        TCP_handle.server_read()
         print("I read a file I think...")
 
     except() as e:
