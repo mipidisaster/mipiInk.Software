@@ -1,7 +1,7 @@
 from machine import Pin
 from utime import sleep
 
-sleep(5)
+sleep(0.1)
 
 pin = Pin("LED", Pin.OUT)
 pin.value(0)
