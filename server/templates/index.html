@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pi File Server</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 2rem auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 8px; border-bottom: 1px solid #ddd; text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>Raspberry Pi File Server</h1>
+
+  <!--  The below section captures the file upload feature.
+        When the `input type` is equal to `file`, then the browser will regonise this as a
+        file picker, and gives a button for choosing the files (I can modify how this but won't
+        for now).
+        Also if you change the type to `files` it allows for multiple files!
+        -->
+  <section>
+    <h2>Upload a file</h2>
+    <form id="uploadForm">
+      <input type="file" id="fileInput" name="file">
+      <button type="submit">Upload</button>
+    </form>
+    <div id="uploadStatus"></div>
+  </section>
+
+  <!--  This section creates a table called `fileTable`, with a header (which is just a normal
+        row). Then the 2nd row is empty, to be populated by the `fetchList` function
+        -->
+  <section>
+    <h2>Files on server</h2>
+    <button id="refreshBtn">Refresh list</button>
+    <table id="fileTable">
+      <thead><tr><th>Filename</th><th>Size</th><th>Modified</th><th>Actions</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div id="listStatus"></div>
+  </section>
+
+<script>
+// This is now a JAVA script!
+const API_KEY = ""; // if you set API_KEY on server, put it here for browser use (or leave empty)
+
+async function fetchList() {
+  const headers = {};
+  if (API_KEY) headers["X-API-KEY"] = API_KEY;
+  const res = await fetch('/files', { headers }); // Get data from the `/files` location
+
+  const tbody = document.querySelector("#fileTable tbody");
+
+  tbody.innerHTML = "";
+  if (!res.ok) {
+    document.getElementById("listStatus").textContent = "Failed to list files: " + res.status;
+    return;
+  }
+
+  const files = await res.json();
+  files.forEach(
+    f => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${f.filename}</td><td>${f.size}</td><td>${f.modified}</td>
+        <td>
+          <a href="/files/${encodeURIComponent(f.filename)}">Download</a>
+          <button data-delete="${f.filename}">Delete</button>
+          <button push-eink="${f.filename}">Push to eInk</button>
+        </td>`;
+      tbody.appendChild(tr);  // Construct a new row with the files in json, and append
+    }
+  );
+}
+
+document.getElementById("refreshBtn").addEventListener("click", fetchList);
+
+document.getElementById("uploadForm").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const input = document.getElementById("fileInput"); // Look for the `fileInput` element
+  if (!input.files.length) return;
+  const file = input.files[0];              // Select the first file in the list
+
+  const form = new FormData();              // Create a new Form...
+  form.append("file", file);                // Add to this new form a `file` parameter, with the 
+                                            // selected file `append` allows for an optional 
+                                            // `filename` to be added to the end however, this 
+                                            // doesn't appear to be really needed as filename can
+                                            // be gained from the `file`
+  const headers = {};
+
+  if (API_KEY) headers["X-API-KEY"] = API_KEY;
+
+  const res = await fetch("/upload", { method: "POST", body: form, headers });  // POST the form 
+                                                                                // to the /upload
+                                                                                // URL
+  
+  document.getElementById("uploadStatus").textContent = res.ok ? "Uploaded" : 
+                                                                 "Upload failed: " + res.status;
+  fetchList();
+});
+
+document.querySelector("#fileTable tbody").addEventListener("click", async (ev) => {
+  if (ev.target.matches("button[data-delete]")) {         // See `fetchList`
+    const name = ev.target.getAttribute("data-delete");
+    
+    if (!confirm(`Delete ${name}?`)) return;
+    const headers = {};
+    
+    if (API_KEY) headers["X-API-KEY"] = API_KEY;
+    const res = await fetch(`/delete/${encodeURIComponent(name)}`, { method: "DELETE", headers });
+    
+    if (res.ok) fetchList();
+    else alert("Delete failed: " + res.status);
+  }
+
+  if (ev.target.matches("button[push-eink]")) {           // See `fetchList`
+    const name = ev.target.getAttribute("push-eink");
+    
+    const headers = {};
+    
+    if (API_KEY) headers["X-API-KEY"] = API_KEY;
+    const res = await fetch(`/push_to_eink/${encodeURIComponent(name)}`, 
+                           { method: "POST", headers });
+    
+    if (res.ok) fetchList();
+    else alert("Push to eInk failed...: " + res.status);
+  }
+});
+
+// initial fetch
+fetchList();
+</script>
+</body>
+</html>

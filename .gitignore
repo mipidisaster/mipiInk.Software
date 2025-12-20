@@ -18,3 +18,20 @@
 
 !/server
 /server/images
+/server/uploaded_files
+
+# from the Flask tutorial [https://flask.palletsprojects.com/en/stable/tutorial/layout/]
+#.venv/
+#
+#*.pyc
+#__pycache__/
+#
+#instance/
+#
+#.pytest_cache/
+#.coverage
+#htmlcov/
+#
+#dist/
+#build/
+#*.egg-info/
